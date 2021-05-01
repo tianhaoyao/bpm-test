@@ -1,6 +1,9 @@
 import './App.css';
 import { useState, useEffect, useRef } from "react";
-import {XYPlot, XAxis, YAxis, HorizontalGridLines,LineSeries, AreaSeries} from 'react-vis';
+
+import Graph from './Graph';
+import Clicker from './Clicker';
+import BPMDisplay from './BPMDisplay';
 
 function App() {
 
@@ -36,7 +39,8 @@ function App() {
 
   }, [key2])
 
-
+  // useEffect(() => {
+  // },[bpm])
 
   useEffect(() => {
     if(running) {
@@ -99,35 +103,27 @@ function App() {
     
   }
 
+
   
   
   return (
     <div className="App">
       <p>{counterL+counterR} / {(TESTTIME - timer)/10} seconds</p>
-      <p>{bpm}</p>
+      <BPMDisplay bpm={bpm}/>
       <p>{formatTime()}</p>
-      {key1 ? "😊" : "⚫"}
-      {key2 ? "😢" : "⚫"}
+      <Clicker
+        key1={key1}
+        key2={key2}
+      />
       <button onClick={handleStart}>Start</button>
       <button onClick={handleStop}>Stop</button>
       <div style={{
         margin: "auto",
         width: "50%"
       }}>
-        <XYPlot
-          width={600}
-          height={300}
-          animation={true}
-          // xDomain={[0, 10]}
-          >
-          <HorizontalGridLines />
-          <AreaSeries
-            color="red"
-            curve={'curveMonotoneX'}
-            data={data}/>
-          <XAxis title="X" />
-          <YAxis />
-        </XYPlot>
+        <Graph
+          data={data}
+        />
       </div>
     </div>
   );
