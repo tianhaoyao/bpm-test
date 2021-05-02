@@ -14,9 +14,13 @@ function App() {
   const [running, setRunning] = useState(false)
   const key1 = useKeyPress("z");
   const key2 = useKeyPress("x");
-  const countRef = useRef(null)
+  const countRef = useRef(null);
+  const chartRef = useRef(null);
   const [bpm, setBpm] = useState(0);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    x: [],
+    y: []
+  });
   const [unstable, setUnstable] = useState(0);
   const [diffs, setDiffs] = useState([]);
   const [currDiff, setCurrDiff] = useState(null);
@@ -85,13 +89,17 @@ function App() {
   const handleStop = () => {
     clearInterval(countRef.current)
     setRunning(false)
+    chartRef.current.reset()
   }
 
   const insertData = (time, bpm) => {
-    setData(data => [...data, {
-      x: time, 
-      y: bpm
-    }]);
+    chartRef.current.update(time, bpm)
+    setData(data => {
+      return {
+        x: [...data.x, time],
+        y: [...data.y, bpm]
+      }
+    });
     
     if(currDiff == null) {
       setCurrDiff(time)
@@ -134,8 +142,8 @@ function App() {
 			});
 		let variance = deviations.reduce(function(a, b) {return a + b;});
 		let std = Math.sqrt(variance / deviations.length);
-    console.log(deviations)
-    console.log(newDiff)
+    // console.log(deviations)
+    // console.log(newDiff)
 		setUnstable(std * 10000);
 
   }
@@ -160,7 +168,7 @@ function App() {
         width: "50%"
       }}>
         <Graph
-          data={data}
+          ref={chartRef}
         />
       </div>
     </div>
