@@ -19,6 +19,8 @@ function App() {
   const [data, setData] = useState([]);
   const [unstable, setUnstable] = useState(0);
   const [diffs, setDiffs] = useState([]);
+  const [currDiff, setCurrDiff] = useState(null);
+
 
 
   useEffect(() => {
@@ -26,8 +28,10 @@ function App() {
     if(key1) {
       setCounterL(counterL+1);
       //console.log(timer)
+      measureBPM();
+      UR();
     }
-    measureBPM();
+    
 
   }, [key1])
 
@@ -36,8 +40,10 @@ function App() {
     if(key2) {
       setCounterR(counterR+1);
       //console.log(timer)
+      measureBPM();
+      UR();
     }
-    measureBPM();
+    
 
   }, [key2])
 
@@ -60,14 +66,20 @@ function App() {
   }
 
   const handleStart = () => {
+
     if(running) return
     handleReset();
     setRunning(true);
     let start = Date.now()
+    
     countRef.current = setInterval(() => {
       let delta = Date.now() - start;
       setTimer(delta)
+      
+      
     }, 10)
+    setCurrDiff(TESTTIME - timer)
+    
   }
 
   const handleStop = () => {
@@ -80,12 +92,14 @@ function App() {
       x: time, 
       y: bpm
     }]);
-    //console.log(data[data.length-1])
-    if(data.length >= 1){
-      setDiffs(diffs => [...diffs, time - data[data.length-1].x])
-      //console.log(diffs)
-    }
     
+    if(currDiff == null) {
+      setCurrDiff(time)
+    }
+    else {
+      setDiffs(diffs => [...diffs, time - currDiff])
+      setCurrDiff(time)
+    }
   }
   
 
@@ -109,7 +123,20 @@ function App() {
   }
 
   const UR = () => {
-    if(data === []) return null
+    let newDiff = diffs.slice(1);
+    if(newDiff.length<2) return null
+    let sum = newDiff.reduce(function(a, b){return a + b});
+		let avg = sum / newDiff.length;
+    let deviations = []
+
+    newDiff.map(function(v) {
+				deviations.push((v - avg) * (v - avg));
+			});
+		let variance = deviations.reduce(function(a, b) {return a + b;});
+		let std = Math.sqrt(variance / deviations.length);
+    console.log(deviations)
+    console.log(newDiff)
+		setUnstable(std * 10000);
 
   }
 
@@ -121,6 +148,7 @@ function App() {
       <p>{counterL+counterR} / {((TESTTIME - timer)/1000).toFixed(2)} seconds</p>
       <BPMDisplay bpm={bpm}/>
       <p>{formatTime()}</p>
+      <p>{unstable} UR</p>
       <Clicker
         key1={key1}
         key2={key2}
