@@ -5,7 +5,7 @@ function BPMDisplay({bpm}) {
 
     return (
         <div>
-           <p>{bpm} bpm</p>
+           <p>{bpm.toFixed(2)} bpm</p>
         </div>
     )
 }

@@ -7,7 +7,7 @@ import BPMDisplay from './BPMDisplay';
 
 function App() {
 
-  const TESTTIME = 100
+  const TESTTIME = 10000
   const [counterL, setCounterL] = useState(0)
   const [counterR, setCounterR] = useState(0)
   const [timer, setTimer] = useState(TESTTIME)
@@ -17,13 +17,15 @@ function App() {
   const countRef = useRef(null)
   const [bpm, setBpm] = useState(0);
   const [data, setData] = useState([]);
+  const [unstable, setUnstable] = useState(0);
+  const [diffs, setDiffs] = useState([]);
 
 
   useEffect(() => {
     if(!running) return
     if(key1) {
       setCounterL(counterL+1);
-      console.log(timer)
+      //console.log(timer)
     }
     measureBPM();
 
@@ -33,7 +35,7 @@ function App() {
     if(!running) return
     if(key2) {
       setCounterR(counterR+1);
-      console.log(timer)
+      //console.log(timer)
     }
     measureBPM();
 
@@ -44,7 +46,7 @@ function App() {
 
   useEffect(() => {
     if(running) {
-      if(timer<=0) {
+      if(timer>=TESTTIME) {
         handleStop();
       }
     }
@@ -52,7 +54,7 @@ function App() {
 
   const handleReset = () => {
     handleStop();
-    setTimer(TESTTIME);
+    setTimer(0);
     setCounterL(0);
     setCounterR(0);
   }
@@ -61,9 +63,11 @@ function App() {
     if(running) return
     handleReset();
     setRunning(true);
+    let start = Date.now()
     countRef.current = setInterval(() => {
-      setTimer((timer) => timer - 1)
-    }, 100)
+      let delta = Date.now() - start;
+      setTimer(delta)
+    }, 10)
   }
 
   const handleStop = () => {
@@ -72,35 +76,41 @@ function App() {
   }
 
   const insertData = (time, bpm) => {
-    let newData = data;
-    newData.push({
+    setData(data => [...data, {
       x: time, 
       y: bpm
-    })
-    setData(newData);
+    }]);
+    //console.log(data[data.length-1])
+    if(data.length >= 1){
+      setDiffs(diffs => [...diffs, time - data[data.length-1].x])
+      //console.log(diffs)
+    }
+    
   }
   
 
   const formatTime = () => {
-    const getMiliS = `${(timer % 10)}`.slice(-2)
-    const getSeconds = `${Math.floor(timer / 10)}`
-    
 
-    return `${getSeconds} : ${getMiliS}`
+    let seconds = (timer/1000).toFixed(2);
+    
+    return `${seconds}`
   }
 
   const measureBPM = () => {
-    const runningTime = TESTTIME - timer
+    const runningTime = timer
     if(runningTime !== 0) {
-      const ratio = 600/runningTime
+      const ratio = 60000 / runningTime
       const bpm = Math.round((counterL+counterR) * ratio / 4 * 100)/100
-      console.log((counterL+counterR), ratio)
-      console.log(bpm)
       setBpm(bpm)
-      insertData(runningTime/10, bpm)
+      insertData(runningTime/1000, bpm)
       //console.log(data)
     }
     
+  }
+
+  const UR = () => {
+    if(data === []) return null
+
   }
 
 
@@ -108,7 +118,7 @@ function App() {
   
   return (
     <div className="App">
-      <p>{counterL+counterR} / {(TESTTIME - timer)/10} seconds</p>
+      <p>{counterL+counterR} / {((TESTTIME - timer)/1000).toFixed(2)} seconds</p>
       <BPMDisplay bpm={bpm}/>
       <p>{formatTime()}</p>
       <Clicker
