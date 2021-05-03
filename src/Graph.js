@@ -38,7 +38,13 @@ const Graph = forwardRef((props, ref) => {
             },
             chart: {
                 animations: {
-                    enabled: true
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed:1,
+                    animateGradually: {
+                        enabled: true,
+                        delay:100
+                    }
                 }
             }
         }
