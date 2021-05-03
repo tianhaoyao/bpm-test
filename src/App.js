@@ -1,9 +1,10 @@
-import './App.css';
+import './styles/App.css';
 import { useState, useEffect, useRef } from "react";
 
 import Graph from './Graph';
 import Clicker from './Clicker';
 import BPMDisplay from './BPMDisplay';
+import Background from './Background';
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
   const key2 = useKeyPress("x");
   const countRef = useRef(null);
   const chartRef = useRef(null);
+  const backgroundRef = useRef(null);
   const [bpm, setBpm] = useState(0);
   const [instantBpm, setInstantBpm] = useState(0);
   const [data, setData] = useState({
@@ -104,6 +106,7 @@ function App() {
 
   const insertData = (time, bpm, instantBpm) => {
     chartRef.current.update(time, bpm, instantBpm, counterL+counterR)
+    backgroundRef.current.update(bpm);
     // setData(data => {
     //   return {
     //     x: [...data.x, time],
@@ -179,26 +182,31 @@ function App() {
   
   return (
     <div className="App">
-      <p>{counterL+counterR} / {((TESTTIME - timer)/1000).toFixed(2)} seconds</p>
-      <BPMDisplay bpm={bpm}/>
-      <p>{formatTime()}</p>
-      <p>{unstable.toFixed(2)} UR</p>
-      <p>{instantBpm.toFixed(2)} BPM</p>
-      <Clicker
-        key1={key1}
-        key2={key2}
-      />
-      <button onClick={handleStart}>Start</button>
-      <button onClick={handleStop}>Stop</button>
-      <button onClick={handleReset}>Reset</button>
-      <div style={{
-        margin: "auto",
-        width: "50%"
-      }}>
+      <div id="background">
+        <Background ref={backgroundRef}/>
+      </div>
+      <div className="display">
+        <div className="ui">
+          <p>{counterL+counterR} / {((TESTTIME - timer)/1000).toFixed(2)} seconds</p>
+          <BPMDisplay bpm={bpm}/>
+          <p>{formatTime()}</p>
+          <p>{unstable.toFixed(2)} UR</p>
+          <p>{instantBpm.toFixed(2)} BPM</p>
+          <Clicker
+            key1={key1}
+            key2={key2}
+          />
+          <button onClick={handleStart}>Start</button>
+          <button onClick={handleStop}>Stop</button>
+          <button onClick={handleReset}>Reset</button>
+          </div>
+      </div>
+      <div className="graph">
         <Graph
           ref={chartRef}
         />
       </div>
+      
     </div>
   );
 }

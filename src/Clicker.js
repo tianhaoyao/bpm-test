@@ -9,8 +9,6 @@ function Clicker({key1, key2}) {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            border="default"
-            elevation={0}
             
             >
                 {key1 ? 

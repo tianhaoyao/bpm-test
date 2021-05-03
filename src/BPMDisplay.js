@@ -7,7 +7,7 @@ function BPMDisplay({bpm}) {
 
     return (
         <div>
-           <p>{bpm.toFixed(2)} bpm</p>
+           <h1>{bpm.toFixed(2)} bpm</h1>
            {/* <SevenSegmentDisplay character={bpm.toFixed(2)[0]}/> */}
         </div>
     )

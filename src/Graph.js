@@ -19,19 +19,27 @@ const Graph = forwardRef((props, ref) => {
             dataLabels: {
                 enabled: false
             },
+            legend: {
+                show: false
+            },
 
             
             xaxis: {
                 type: 'numeric',
                 range: 10,
                 min: 0,
-                max: 10
+                max: 10,
+                show: false
             },
             yaxis: {
                 type: 'numeric',
                 range: 200,
                 min: 100,
-                max: 300
+                max: 300,
+                show: false
+            },
+            grid: {
+                show: false
             },
             tooltip: {
                 enabled: false
@@ -45,7 +53,7 @@ const Graph = forwardRef((props, ref) => {
                         enabled: true,
                         delay:100
                     }
-                }
+                },
             }
         }
     )
@@ -102,7 +110,7 @@ const Graph = forwardRef((props, ref) => {
 
     return (
         <div>
-            <Chart
+            <Chart className="chart"
               options={options}
               series={series}
               type="area"
