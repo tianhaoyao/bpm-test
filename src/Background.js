@@ -13,9 +13,14 @@ const Background = forwardRef((props, ref) => {
     const [imageUrl, setImageUrl] = useState(bpm180);
     const [range, setRange] = useState(0);
     const style = {
-        width: '100%',
-        height: '100%',
+        flex: 1,
+        maxWidth: '100%',
+        maxHeight: '100%',
+        width: '100vw',
+        height: '100vh',
+        resizeMode: 'contain',
         filter: "blur(20px)",
+        objectFit: "cover"
     }
 
     useEffect(() => {

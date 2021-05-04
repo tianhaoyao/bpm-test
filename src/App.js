@@ -208,11 +208,10 @@ function App() {
           <Button onClick={handleReset}>Reset</Button>
           </div>
       </div>
-      <div className="graph">
-        <Graph
-          ref={chartRef}
-        />
-      </div>
+      
+      <Graph
+        ref={chartRef}
+      />
       
     </div>
   );

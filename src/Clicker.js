@@ -27,7 +27,7 @@ function Clicker({key1, key2}) {
                     flexDirection="column"
                     id="k1"
                 >
-                    <h2>K1</h2>
+                    <Text color={'white'}><h2>K1</h2></Text>
 
                 </Pane>
 
@@ -47,7 +47,7 @@ function Clicker({key1, key2}) {
                     id="k2"
                 >
                     
-                    <h1>K1</h1>
+                    <Text color={'white'}><h1>K1</h1></Text>
 
             </Pane>
 
@@ -67,7 +67,7 @@ function Clicker({key1, key2}) {
                     alignItems="center"
                     flexDirection="column"
                 >
-                    <h2>K2</h2>
+                    <Text color={'white'}><h2>K2</h2></Text>
 
                 </Pane>
 
@@ -86,7 +86,7 @@ function Clicker({key1, key2}) {
                     flexDirection="column"
                 >
                     
-                    <h1>K2</h1>
+                    <Text color={'white'}><h1>K2</h1></Text>
 
                 </Pane>
 

@@ -26,13 +26,21 @@ const Graph = forwardRef((props, ref) => {
                 range: 10,
                 min: 0,
                 max: 10,
-                show: false
+                labels:{
+                    show: false
+                },
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                }
             },
             yaxis: {
                 type: 'numeric',
-                range: 200,
-                min: 100,
-                max: 300,
+                range: 300,
+                min: 50,
+                max: 350,
                 show: false
             },
             grid: {
@@ -119,6 +127,8 @@ const Graph = forwardRef((props, ref) => {
               options={options}
               series={series}
               type="area"
+              height={'100%'}
+              width={'100%'}
             />
         </div>
     )
