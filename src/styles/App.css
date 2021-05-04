@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+.App {
+  text-align: center;
+  font-family: 'Comfortaa', cursive;
+  position: relative;
+  color: white;
+}
+
+.display {
+  position: absolute;
+  text-align: center;
+  margin: auto;
+  width: 100%;
+  z-index: 2
+}
+
+#background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0
+}
+
+.ui {
+  position:relative;
+
+}
+
+#backgroundimg {
+  width: 100%;
+  height: 100%;
+  filter: blur(20px);
+}
+
+.ub-flx-drct_column {
+  border-radius: 25px;
+}
+
+
+/* .apexcharts-canvas{
+  background-color: black;
+} */
+
+.graph {
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+#bpm {
+  font-size: 100px;
+}

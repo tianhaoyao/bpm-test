@@ -9,8 +9,6 @@ function Clicker({key1, key2}) {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            border="default"
-            elevation={0}
             
             >
                 {key1 ? 
@@ -19,16 +17,17 @@ function Clicker({key1, key2}) {
                 <Pane
                     elevation={0}
                     float="left"
-                    backgroundColor="#c4aca7"
-                    width={120}
-                    height={120}
-                    margin={24}
+                    backgroundColor="#997e79"
+                    width={116}
+                    height={116}
+                    margin={31}
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                     flexDirection="column"
+                    id="k1"
                 >
-                    <Strong>K1</Strong>
+                    <h2>K1</h2>
 
                 </Pane>
 
@@ -37,17 +36,18 @@ function Clicker({key1, key2}) {
                 <Pane
                     elevation={4}
                     float="left"
-                    backgroundColor="white"
-                    width={120}
-                    height={120}
+                    backgroundColor="#c4aca7"
+                    width={130}
+                    height={130}
                     margin={24}
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                     flexDirection="column"
+                    id="k2"
                 >
                     
-                    <Strong>K1</Strong>
+                    <h1>K1</h1>
 
             </Pane>
 
@@ -58,16 +58,16 @@ function Clicker({key1, key2}) {
                 <Pane
                     elevation={0}
                     float="left"
-                    backgroundColor="#c4aca7"
-                    width={120}
-                    height={120}
-                    margin={24}
+                    backgroundColor="#997e79"
+                    width={116}
+                    height={116}
+                    margin={31}
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                     flexDirection="column"
                 >
-                    <Strong>K2</Strong>
+                    <h2>K2</h2>
 
                 </Pane>
 
@@ -76,9 +76,9 @@ function Clicker({key1, key2}) {
                 <Pane
                     elevation={4}
                     float="left"
-                    backgroundColor="white"
-                    width={120}
-                    height={120}
+                    backgroundColor="#c4aca7"
+                    width={130}
+                    height={130}
                     margin={24}
                     display="flex"
                     justifyContent="center"
@@ -86,7 +86,7 @@ function Clicker({key1, key2}) {
                     flexDirection="column"
                 >
                     
-                    <Strong>K2</Strong>
+                    <h1>K2</h1>
 
                 </Pane>
 

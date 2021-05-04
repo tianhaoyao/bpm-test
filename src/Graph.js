@@ -6,18 +6,18 @@ const Graph = forwardRef((props, ref) => {
     // console.log('CHART')
     const [options, setOptions] = useState(
         {
+            colors: ['#2a2a2a', '#959595'],
             fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 90, 100]
-                }
+                type: "solid",
+                opacity: 0.1
+                
             },
 
             dataLabels: {
                 enabled: false
+            },
+            legend: {
+                show: false
             },
 
             
@@ -25,13 +25,18 @@ const Graph = forwardRef((props, ref) => {
                 type: 'numeric',
                 range: 10,
                 min: 0,
-                max: 10
+                max: 10,
+                show: false
             },
             yaxis: {
                 type: 'numeric',
                 range: 200,
                 min: 100,
-                max: 300
+                max: 300,
+                show: false
+            },
+            grid: {
+                show: false
             },
             tooltip: {
                 enabled: false
@@ -45,8 +50,16 @@ const Graph = forwardRef((props, ref) => {
                         enabled: true,
                         delay:100
                     }
-                }
-            }
+                },
+                toolbar: {
+                    show: false
+                },
+            },
+            stroke: {
+                show:true,
+                curve: 'smooth',
+                width: 4
+            },
         }
     )
     const [series, setSeries] = useState([
@@ -102,7 +115,7 @@ const Graph = forwardRef((props, ref) => {
 
     return (
         <div>
-            <Chart
+            <Chart className="chart"
               options={options}
               series={series}
               type="area"
