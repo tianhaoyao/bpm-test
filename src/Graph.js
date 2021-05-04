@@ -6,14 +6,11 @@ const Graph = forwardRef((props, ref) => {
     // console.log('CHART')
     const [options, setOptions] = useState(
         {
+            colors: ['#2a2a2a', '#959595'],
             fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 90, 100]
-                }
+                type: "solid",
+                opacity: 0.1
+                
             },
 
             dataLabels: {
@@ -54,7 +51,15 @@ const Graph = forwardRef((props, ref) => {
                         delay:100
                     }
                 },
-            }
+                toolbar: {
+                    show: false
+                },
+            },
+            stroke: {
+                show:true,
+                curve: 'smooth',
+                width: 4
+            },
         }
     )
     const [series, setSeries] = useState([

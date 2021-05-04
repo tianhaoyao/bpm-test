@@ -33,6 +33,9 @@
   filter: blur(20px);
 }
 
+.ub-flx-drct_column {
+  border-radius: 25px;
+}
 
 
 /* .apexcharts-canvas{
@@ -44,4 +47,8 @@
   height: 100%;
   width: 100%;
   position: absolute;
+}
+
+#bpm {
+  font-size: 100px;
 }
