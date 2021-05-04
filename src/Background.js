@@ -15,7 +15,7 @@ const Background = forwardRef((props, ref) => {
     const style = {
         width: '100%',
         height: '100%',
-        filter: "blur(20px)"
+        filter: "blur(20px)",
     }
 
     useEffect(() => {

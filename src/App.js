@@ -1,10 +1,14 @@
 import './styles/App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect, useRef } from "react";
 
 import Graph from './Graph';
 import Clicker from './Clicker';
 import BPMDisplay from './BPMDisplay';
 import Background from './Background';
+
+import Button from 'react-bootstrap/Button';
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 function App() {
 
@@ -187,18 +191,21 @@ function App() {
       </div>
       <div className="display">
         <div className="ui">
-          <p>{counterL+counterR} / {((TESTTIME - timer)/1000).toFixed(2)} seconds</p>
+          <ProgressBar animated variant="warning" label={`${Math.round(timer/1000)} / ${Math.round(TESTTIME/1000)}`} now={Math.round(timer/1000)} min={0} max={Math.round(TESTTIME/1000)}/>
+          <br/>
+          <h3>{counterL+counterR} clicks</h3>
           <BPMDisplay bpm={bpm}/>
-          <p>{formatTime()}</p>
+          
           <p>{unstable.toFixed(2)} UR</p>
-          <p>{instantBpm.toFixed(2)} BPM</p>
+          {/* <p>{instantBpm.toFixed(2)} BPM</p> */}
           <Clicker
             key1={key1}
             key2={key2}
           />
-          <button onClick={handleStart}>Start</button>
-          <button onClick={handleStop}>Stop</button>
-          <button onClick={handleReset}>Reset</button>
+          
+          <Button onClick={handleStart}>Start</Button>
+          <Button onClick={handleStop}>Stop</Button>
+          <Button onClick={handleReset}>Reset</Button>
           </div>
       </div>
       <div className="graph">
