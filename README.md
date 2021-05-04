@@ -1,6 +1,7 @@
 # BPM Tester
 
 Tests how fast you can click z&x
+Temporarily deployed here: https://master.d323nlyrbvehn2.amplifyapp.com/
 
 ### `yarn start`
 
@@ -21,3 +22,5 @@ You will also see any lint errors in the console.
 * Make leaderboard
 * Anticheat lol
 * Cleaner UI
+
+Please, if you see something wrong, raise an issue on this repo!
