@@ -33,7 +33,6 @@ const Background = forwardRef((props, ref) => {
     const update = (bpm) => {
         let url = '';
         let thisrange = -1;
-        console.log(bpm)
         switch(true) {
             case (bpm < 160):
                 thisrange = 0;

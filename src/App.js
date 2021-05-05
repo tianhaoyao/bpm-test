@@ -6,6 +6,7 @@ import Graph from './Graph';
 import Clicker from './Clicker';
 import BPMDisplay from './BPMDisplay';
 import Background from './Background';
+import KeySelector from './KeySelector';
 
 import Button from 'react-bootstrap/Button';
 import ProgressBar from 'react-bootstrap/ProgressBar'
@@ -17,8 +18,12 @@ function App() {
   const [counterR, setCounterR] = useState(0)
   const [timer, setTimer] = useState(TESTTIME)
   const [running, setRunning] = useState(false)
-  const key1 = useKeyPress("z");
-  const key2 = useKeyPress("x");
+  const [k1, setK1] = useState("z")
+  const [k2, setK2] = useState("x")
+  const [adjust, setAdjust] = useState(false);
+  const [adjust2, setAdjust2] = useState(false);
+  let key1 = useKeyPress("key1");
+  let key2 = useKeyPress("key2");
   const countRef = useRef(null);
   const chartRef = useRef(null);
   const backgroundRef = useRef(null);
@@ -32,7 +37,42 @@ function App() {
   const [diffs, setDiffs] = useState([]);
   const [currDiff, setCurrDiff] = useState(null);
 
-
+  //https://usehooks.com/useKeyPress/
+  function useKeyPress(targetKey) {
+    // State for keeping track of whether key is pressed
+    const [keyPressed, setKeyPressed] = useState(false);
+    // If pressed key is our target key then set to true
+    function downHandler({ key }) {
+      if (targetKey === "key1" && key === k1) {
+        //console.log(targetKey, key, k1)
+        setKeyPressed(true);
+      }
+      if (targetKey === "key2" && key === k2) {
+        setKeyPressed(true);
+      }
+    }
+    // If released key is our target key then set to false
+    const upHandler = ({ key }) => {
+      if (targetKey === "key1" && key === k1) {
+        setKeyPressed(false);
+      }
+      if (targetKey === "key2" && key === k2) {
+        setKeyPressed(false);
+      }
+    };
+    // Add event listeners
+    useEffect(() => {
+      setKeyPressed(false);
+      window.addEventListener("keydown", downHandler);
+      window.addEventListener("keyup", upHandler);
+      // Remove event listeners on cleanup
+      return () => {
+        window.removeEventListener("keydown", downHandler);
+        window.removeEventListener("keyup", upHandler);
+      };
+    }, [k1, k2]); // Empty array ensures that effect is only run on mount and unmount
+    return keyPressed;
+  }
 
   useEffect(() => {
     if(!running) return
@@ -68,6 +108,11 @@ function App() {
       }
     }
   }, [timer])
+
+  useEffect(() => {
+    console.log("???", adjust)
+    setAdjust(adjust)
+  }, [adjust])
 
   const handleReset = () => {
     handleStop();
@@ -127,6 +172,17 @@ function App() {
     }
   }
   
+  const setKey1 = (key) => {
+    console.log("k1")
+    setK1(key);
+    setAdjust(false);
+  }
+
+  const setKey2 = (key) => {
+    console.log("k2")
+    setK2(key);
+    setAdjust2(false);
+  }
 
   const formatTime = () => {
 
@@ -201,12 +257,26 @@ function App() {
           <Clicker
             key1={key1}
             key2={key2}
+            k1={k1}
+            k2={k2}
           />
           
           <Button onClick={handleStart}>Start</Button>
           <Button onClick={handleStop}>Stop</Button>
           <Button onClick={handleReset}>Reset</Button>
           </div>
+          <KeySelector
+            set={setKey1}
+            adjust={adjust}
+            setAdjust={() => setAdjust(true)}
+          />
+          <KeySelector
+            set={setKey2}
+            adjust={adjust2}
+            setAdjust={() => setAdjust2(true)}
+          />
+          <p>{k1} {k2}</p>
+          
       </div>
       
       <Graph
@@ -218,33 +288,6 @@ function App() {
 }
 
 
-//https://usehooks.com/useKeyPress/
-function useKeyPress(targetKey) {
-  // State for keeping track of whether key is pressed
-  const [keyPressed, setKeyPressed] = useState(false);
-  // If pressed key is our target key then set to true
-  function downHandler({ key }) {
-    if (key === targetKey) {
-      setKeyPressed(true);
-    }
-  }
-  // If released key is our target key then set to false
-  const upHandler = ({ key }) => {
-    if (key === targetKey) {
-      setKeyPressed(false);
-    }
-  };
-  // Add event listeners
-  useEffect(() => {
-    window.addEventListener("keydown", downHandler);
-    window.addEventListener("keyup", upHandler);
-    // Remove event listeners on cleanup
-    return () => {
-      window.removeEventListener("keydown", downHandler);
-      window.removeEventListener("keyup", upHandler);
-    };
-  }, []); // Empty array ensures that effect is only run on mount and unmount
-  return keyPressed;
-}
+
 
 export default App;
