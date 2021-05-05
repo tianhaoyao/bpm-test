@@ -1,9 +1,9 @@
 import { Button, Pane, Text, Strong } from 'evergreen-ui'
-function Clicker({key1, key2}) {
+function Clicker({key1, key2, k1, k2}) {
 
 
     return (
-        <div>
+        <div className="clicker">
 
             <Pane 
             display="flex"
@@ -27,7 +27,7 @@ function Clicker({key1, key2}) {
                     flexDirection="column"
                     id="k1"
                 >
-                    <Text color={'white'}><h2>K1</h2></Text>
+                    <Text color={'white'}><h2>{k1}</h2></Text>
 
                 </Pane>
 
@@ -47,7 +47,7 @@ function Clicker({key1, key2}) {
                     id="k2"
                 >
                     
-                    <Text color={'white'}><h1>K1</h1></Text>
+                    <Text color={'white'}><h1>{k1}</h1></Text>
 
             </Pane>
 
@@ -67,7 +67,7 @@ function Clicker({key1, key2}) {
                     alignItems="center"
                     flexDirection="column"
                 >
-                    <Text color={'white'}><h2>K2</h2></Text>
+                    <Text color={'white'}><h2>{k2}</h2></Text>
 
                 </Pane>
 
@@ -86,7 +86,7 @@ function Clicker({key1, key2}) {
                     flexDirection="column"
                 >
                     
-                    <Text color={'white'}><h1>K2</h1></Text>
+                    <Text color={'white'}><h1>{k2}</h1></Text>
 
                 </Pane>
 
