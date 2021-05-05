@@ -3,7 +3,7 @@ function Clicker({key1, key2, k1, k2}) {
 
 
     return (
-        <div>
+        <div className="clicker">
 
             <Pane 
             display="flex"

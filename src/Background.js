@@ -10,7 +10,7 @@ import CrossfadeImage from 'react-crossfade-image'
 
 const Background = forwardRef((props, ref) => {
 
-    const [imageUrl, setImageUrl] = useState(bpm180);
+    const [imageUrl, setImageUrl] = useState(bpm140);
     const [range, setRange] = useState(0);
     const style = {
         flex: 1,
@@ -63,7 +63,7 @@ const Background = forwardRef((props, ref) => {
                 url = bpm260
                 break;
             default:
-                thisrange = -1;
+                thisrange = 0;
                 url = bpm140
                 break;
         }

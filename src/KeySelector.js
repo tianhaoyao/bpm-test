@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-function KeySelector({set, adjust, setAdjust}) {
+import { Button } from "react-bootstrap";
+
+function KeySelector({set, adjust, setAdjust, k}) {
 
     const a = useKeyPress()
 
@@ -44,9 +46,18 @@ function KeySelector({set, adjust, setAdjust}) {
 
     return (
         <div>
+            {adjust ? <div className="overlay">
+              <div className="message">
+                <h3>press any key to set</h3>
+              </div>
             
-            <p>{adjust ? <p>SETTING</p> : <p>NOT SETTING</p>}</p>
-            <button onClick={setAdjust}>r</button>
+            </div> : null}
+            <div style={{paddingTop: "10vh", paddingLeft: "3vw", paddingRight: "3vw", fontFamily: 'Comfortaa'}}>
+
+              <h4>Set {k}: </h4>
+              <Button variant="secondary" onClick={setAdjust} block>Set</Button>
+
+            </div>
         </div>
     )
 }

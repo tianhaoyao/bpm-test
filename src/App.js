@@ -7,9 +7,13 @@ import Clicker from './Clicker';
 import BPMDisplay from './BPMDisplay';
 import Background from './Background';
 import KeySelector from './KeySelector';
+import Options from './Options';
 
 import Button from 'react-bootstrap/Button';
 import ProgressBar from 'react-bootstrap/ProgressBar'
+
+
+import { SideSheet } from 'evergreen-ui';
 
 function App() {
 
@@ -29,10 +33,7 @@ function App() {
   const backgroundRef = useRef(null);
   const [bpm, setBpm] = useState(0);
   const [instantBpm, setInstantBpm] = useState(0);
-  const [data, setData] = useState({
-    x: [],
-    y: []
-  });
+  const [options, setOptions] = useState(false);
   const [unstable, setUnstable] = useState(0);
   const [diffs, setDiffs] = useState([]);
   const [currDiff, setCurrDiff] = useState(null);
@@ -246,9 +247,10 @@ function App() {
         <Background ref={backgroundRef}/>
       </div>
       <div className="display">
+      <ProgressBar animated variant="warning" label={`${Math.round(timer/1000)} / ${Math.round(TESTTIME/1000)}`} now={Math.round(timer/1000)} min={0} max={Math.round(TESTTIME/1000)}/>
         <div className="ui">
-          <ProgressBar animated variant="warning" label={`${Math.round(timer/1000)} / ${Math.round(TESTTIME/1000)}`} now={Math.round(timer/1000)} min={0} max={Math.round(TESTTIME/1000)}/>
-          <br/>
+          
+
           <h3>{counterL+counterR} clicks</h3>
           <BPMDisplay bpm={bpm}/>
           
@@ -261,27 +263,44 @@ function App() {
             k2={k2}
           />
           
-          <Button onClick={handleStart}>Start</Button>
-          <Button onClick={handleStop}>Stop</Button>
-          <Button onClick={handleReset}>Reset</Button>
+          <Button variant="outline-light" onClick={handleStart}>Start</Button>
+          <Button variant="outline-light" onClick={handleStop}>Stop</Button>
+          <Button variant="outline-light" onClick={handleReset}>Reset</Button>
           </div>
-          <KeySelector
-            set={setKey1}
-            adjust={adjust}
-            setAdjust={() => setAdjust(true)}
-          />
-          <KeySelector
-            set={setKey2}
-            adjust={adjust2}
-            setAdjust={() => setAdjust2(true)}
-          />
-          <p>{k1} {k2}</p>
           
+
       </div>
+      <div className="optionsButton">
+            <Button 
+              onClick={() => setOptions(true)}
+              variant="outline-light"
+              >
+                Options
+              </Button>
+          </div>
       
       <Graph
         ref={chartRef}
       />
+
+      
+        <SideSheet
+              isShown={options}
+              onCloseComplete={() => setOptions(false)}
+            >
+              
+              <Options
+                set1={setKey1}
+                set2={setKey2}
+                adjust={adjust}
+                adjust2={adjust2}
+                setAdjust={() => setAdjust(true)}
+                setAdjust2={() => setAdjust2(true)}
+              />
+              
+          </SideSheet>
+            
+      
       
     </div>
   );
