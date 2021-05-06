@@ -179,7 +179,7 @@ function App() {
 
   useEffect(() => {
     if (running) {
-      if (Math.floor(timer / 10) % 10 === 0) {
+      if (Math.floor(timer / 10) % 5 === 0) {
         setInstantBpm(0);
         measureBPM();
         UR();
@@ -210,7 +210,6 @@ function App() {
         <Background ref={backgroundRef} />
       </div>
       <div className="display">
-        <ProgressBar animated variant="warning" label={`${Math.round(timer / 1000)} / ${Math.round(TESTTIME / 1000)}`} now={Math.round(timer / 1000)} min={0} max={Math.round(TESTTIME / 1000)} />
         <div className="ui">
 
           <h3>
@@ -244,11 +243,13 @@ function App() {
           Options
         </Button>
       </div>
-
       <Graph
+        showTT={running}
         ref={chartRef}
       />
-
+      <div className="progressBar">
+        <ProgressBar animated variant="warning" label={`${Math.round(timer / 1000)} / ${Math.round(TESTTIME / 1000)}`} now={Math.round(timer / 1000)} min={0} max={Math.round(TESTTIME / 1000)} />
+      </div>
       <SideSheet
         isShown={options}
         onCloseComplete={() => setOptions(false)}

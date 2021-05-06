@@ -1,8 +1,11 @@
 import Chart from 'react-apexcharts';
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import { PropTypes } from 'prop-types';
+import React, {
+  useState, useImperativeHandle, forwardRef, useEffect,
+} from 'react';
 
 const Graph = forwardRef((props, ref) => {
-  const options = {
+  const [options, setOptions] = useState({
     colors: ['#2a2a2a', '#959595'],
     fill: {
       type: 'solid',
@@ -31,6 +34,9 @@ const Graph = forwardRef((props, ref) => {
       axisTicks: {
         show: false,
       },
+      tooltip: {
+        enabled: false,
+      },
     },
     yaxis: {
       type: 'numeric',
@@ -43,7 +49,11 @@ const Graph = forwardRef((props, ref) => {
       show: false,
     },
     tooltip: {
-      enabled: false,
+      enabled: true,
+      theme: 'dark',
+      x: {
+        formatter: (time) => `${time.toFixed(2)} seconds`,
+      },
     },
     chart: {
       animations: {
@@ -58,21 +68,33 @@ const Graph = forwardRef((props, ref) => {
       toolbar: {
         show: false,
       },
+      zoom: {
+        enabled: false,
+      },
     },
     stroke: {
       show: true,
       curve: 'smooth',
       width: 4,
     },
-  };
+  });
+
+  useEffect(() => {
+    setOptions({
+      ...options,
+      tooltip: {
+        enabled: !props.showTT,
+      },
+    });
+  }, [props.showTT]);
 
   const [series, setSeries] = useState([
     {
-      name: 'BPM',
+      name: 'Overall BPM',
       data: [],
     },
     {
-      name: 'CURRENTBPM',
+      name: 'Instant BPM',
       data: [],
     },
   ]);
@@ -81,11 +103,11 @@ const Graph = forwardRef((props, ref) => {
     // if(counter % 2 == 0) return
     setSeries((data) => [
       {
-        name: 'BPM',
+        ...data[0],
         data: [...data[0].data, { x, y }],
       },
       {
-        name: 'CURRENTBPM',
+        ...data[1],
         data: [...data[1].data, { x, y: y2 }],
       },
     ]);
@@ -93,11 +115,11 @@ const Graph = forwardRef((props, ref) => {
   const reset = () => {
     setSeries(() => [
       {
-        name: 'BPM',
+        name: 'Overall BPM',
         data: [],
       },
       {
-        name: 'CURRENTBPM',
+        name: 'Instant BPM',
         data: [],
       },
     ]);
@@ -108,7 +130,7 @@ const Graph = forwardRef((props, ref) => {
   }));
 
   return (
-    <div>
+    <div className="graph">
       <Chart
         className="chart"
         options={options}
@@ -120,5 +142,8 @@ const Graph = forwardRef((props, ref) => {
     </div>
   );
 });
+Graph.propTypes = {
+  showTT: PropTypes.bool.isRequired,
+};
 
 export default Graph;
