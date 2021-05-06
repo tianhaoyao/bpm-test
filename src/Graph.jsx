@@ -1,11 +1,10 @@
 import Chart from "react-apexcharts";
-import { useState, useImperativeHandle, forwardRef, useEffect} from "react";
+import { useState, useImperativeHandle, forwardRef} from "react";
 
 
 const Graph = forwardRef((props, ref) => {
     // console.log('CHART')
-    const [options, setOptions] = useState(
-        {
+    const options = {
             colors: ['#2a2a2a', '#959595'],
             fill: {
                 type: "solid",
@@ -69,7 +68,7 @@ const Graph = forwardRef((props, ref) => {
                 width: 4
             },
         }
-    )
+
     const [series, setSeries] = useState([
         {
             name: "BPM",

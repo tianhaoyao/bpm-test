@@ -3,14 +3,9 @@ import { Button } from "react-bootstrap";
 
 function KeySelector({set, adjust, setAdjust, k}) {
 
-    const a = useKeyPress()
-
-    const submitKey = (key) => {
-        set(key);
-    }
+    useKeyPress();
 
     function useKeyPress() {
-        
         // State for keeping track of whether key is pressed
         const [keyPressed, setKeyPressed] = useState(false);
         // If pressed key is our target key then set to true
@@ -40,7 +35,7 @@ function KeySelector({set, adjust, setAdjust, k}) {
             window.removeEventListener("keydown", downHandler);
             window.removeEventListener("keyup", upHandler);
           };
-        }, [adjust]); // Empty array ensures that effect is only run on mount and unmount
+        }, [adjust]); // eslint-disable-line react-hooks/exhaustive-deps
         return keyPressed;
       }
 

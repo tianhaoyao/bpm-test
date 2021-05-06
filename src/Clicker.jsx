@@ -1,4 +1,4 @@
-import { Button, Pane, Text, Strong } from 'evergreen-ui'
+import { Pane, Text } from 'evergreen-ui'
 function Clicker({key1, key2, k1, k2}) {
 
 

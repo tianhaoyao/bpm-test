@@ -6,7 +6,6 @@ import Graph from './Graph';
 import Clicker from './Clicker';
 import BPMDisplay from './BPMDisplay';
 import Background from './Background';
-import KeySelector from './KeySelector';
 import Options from './Options';
 
 import Button from 'react-bootstrap/Button';
@@ -20,7 +19,7 @@ function App() {
   const TESTTIME = 10000
   const [counterL, setCounterL] = useState(0)
   const [counterR, setCounterR] = useState(0)
-  const [timer, setTimer] = useState(TESTTIME)
+  const [timer, setTimer] = useState(0)
   const [running, setRunning] = useState(false)
   const [k1, setK1] = useState("z")
   const [k2, setK2] = useState("x")
@@ -37,21 +36,22 @@ function App() {
   const [unstable, setUnstable] = useState(0);
   const [diffs, setDiffs] = useState([]);
   const [currDiff, setCurrDiff] = useState(null);
+  const [clickTimes, setClickTimes] = useState([]);
 
   //https://usehooks.com/useKeyPress/
   function useKeyPress(targetKey) {
     // State for keeping track of whether key is pressed
     const [keyPressed, setKeyPressed] = useState(false);
     // If pressed key is our target key then set to true
-    function downHandler({ key }) {
-      if (targetKey === "key1" && key === k1) {
-        //console.log(targetKey, key, k1)
-        setKeyPressed(true);
+    const downHandler = ({ key }) => {
+        if (targetKey === "key1" && key === k1) {
+          //console.log(targetKey, key, k1)
+          setKeyPressed(true);
+        }
+        if (targetKey === "key2" && key === k2) {
+          setKeyPressed(true);
+        }
       }
-      if (targetKey === "key2" && key === k2) {
-        setKeyPressed(true);
-      }
-    }
     // If released key is our target key then set to false
     const upHandler = ({ key }) => {
       if (targetKey === "key1" && key === k1) {
@@ -60,7 +60,9 @@ function App() {
       if (targetKey === "key2" && key === k2) {
         setKeyPressed(false);
       }
-    };
+    }
+    
+
     // Add event listeners
     useEffect(() => {
       setKeyPressed(false);
@@ -71,7 +73,7 @@ function App() {
         window.removeEventListener("keydown", downHandler);
         window.removeEventListener("keyup", upHandler);
       };
-    }, [k1, k2]); // Empty array ensures that effect is only run on mount and unmount
+    }, [k1, k2]); // eslint-disable-line react-hooks/exhaustive-deps
     return keyPressed;
   }
 
@@ -79,39 +81,40 @@ function App() {
     if(!running) return
     if(key1) {
       setCounterL(counterL+1);
-      //console.log(timer)
-      measureBPM();
+      setClickTimes([...clickTimes, timer/1000])
       UR();
+      updateOtherData();
     }
-    
-
-  }, [key1])
+  }, [key1]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if(!running) return
     if(key2) {
       setCounterR(counterR+1);
-      //console.log(timer)
-      measureBPM();
+      setClickTimes([...clickTimes, timer/1000])
       UR();
+      updateOtherData();
     }
     
 
-  }, [key2])
+  }, [key2]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // useEffect(() => {
-  // },[bpm])
 
   useEffect(() => {
     if(running) {
+      if(Math.floor(timer/10) % 10 === 0) {
+        setInstantBpm(0);
+        measureBPM();
+        UR();
+        
+      }
       if(timer>=TESTTIME) {
         handleStop();
       }
     }
-  }, [timer])
+  }, [timer]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    console.log("???", adjust)
     setAdjust(adjust)
   }, [adjust])
 
@@ -124,26 +127,21 @@ function App() {
     setDiffs([])
     setCounterL(0)
     setCounterR(0)
-    setTimer(TESTTIME)
     setBpm(0)
     setDiffs([])
     setCurrDiff(null)
     setUnstable(0)
+    setClickTimes([])
   }
 
   const handleStart = () => {
 
-    if(running) return
-    //chartRef.current.reset()
-    //handleReset();
+    handleReset();
     setRunning(true);
     let start = Date.now()
-    
     countRef.current = setInterval(() => {
       let delta = Date.now() - start;
       setTimer(delta)
-      
-      
     }, 10)
     setCurrDiff(TESTTIME - timer)
     
@@ -157,13 +155,11 @@ function App() {
   const insertData = (time, bpm, instantBpm) => {
     chartRef.current.update(time, bpm, instantBpm, counterL+counterR)
     backgroundRef.current.update(bpm);
-    // setData(data => {
-    //   return {
-    //     x: [...data.x, time],
-    //     y: [...data.y, bpm]
-    //   }
-    // });
     
+  }
+
+  const updateOtherData = () => {
+    let time = timer/1000
     if(currDiff == null) {
       setCurrDiff(time)
     }
@@ -185,36 +181,33 @@ function App() {
     setAdjust2(false);
   }
 
-  const formatTime = () => {
-
-    let seconds = (timer/1000).toFixed(2);
-    
-    return `${seconds}`
-  }
-
   const measureBPM = () => {
     const runningTime = timer
     if(runningTime !== 0) {
       const ratio = 60000 / runningTime
       const bpm = Math.round((counterL+counterR) * ratio / 4 * 100)/100
+      let timeElapsed = 0;
+      let i = diffs.length - 1;
+      let n = 0;
+      const timeThreshold = 0.333;
+      while(timeElapsed < timeThreshold && clickTimes[i] >= timer/1000 - timeThreshold){
+        // if ()
+        timeElapsed += diffs[i--];
+        n++;
+      }
+      let res = Math.round(60 / 4 / timeElapsed * n* 100)/100
+      if(isNaN(res)) {
+        setInstantBpm(0);
+      }
+      else{
+        setInstantBpm(res);
+      }
       
-      if(diffs.length >= 6 && diffs[diffs.length-1] !== 0){
-        let res = 0
-        for (let i=0; i<6; i++) {
-          res += diffs[diffs.length-1-i]
-        }
-        setInstantBpm(Math.round(60 / 4 / res * 6 * 100)/100);
-      }
-      else if(diffs.length >= 2 && diffs[diffs.length-1] !== 0) {
-        let res = 0
-        for (let i=0; i<diffs.length; i++) {
-          res += diffs[diffs.length-1-i]
-        }
-        setInstantBpm(Math.round(60 / 4 / res * diffs.length * 100)/100);
-      }
+      
       
       setBpm(bpm)
       insertData(runningTime/1000, bpm, instantBpm)
+      console.log(instantBpm)
     }
     
   }
@@ -226,21 +219,13 @@ function App() {
 		let avg = sum / newDiff.length;
     let deviations = []
 
-    newDiff.map(function(v) {
-				deviations.push((v - avg) * (v - avg));
-			});
+    newDiff.map(v => deviations.push((v - avg) * (v - avg)));
 		let variance = deviations.reduce(function(a, b) {return a + b;});
 		let std = Math.sqrt(variance / deviations.length);
-    // console.log(deviations)
-    // console.log(newDiff)
 		setUnstable(std * 10000);
 
   }
 
-
-
-  
-  
   return (
     <div className="App">
       <div id="background">
@@ -253,9 +238,7 @@ function App() {
 
           <h3>{counterL+counterR} clicks</h3>
           <BPMDisplay bpm={bpm}/>
-          
           <p>{unstable.toFixed(2)} UR</p>
-          {/* <p>{instantBpm.toFixed(2)} BPM</p> */}
           <Clicker
             key1={key1}
             key2={key2}
@@ -265,7 +248,6 @@ function App() {
           
           <Button variant="outline-light" onClick={handleStart}>Start</Button>
           <Button variant="outline-light" onClick={handleStop}>Stop</Button>
-          <Button variant="outline-light" onClick={handleReset}>Reset</Button>
           </div>
           
 
