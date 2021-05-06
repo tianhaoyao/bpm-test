@@ -18,5 +18,15 @@
         "react"
     ],
     "rules": {
-    }
+    },
+    "overrides": [
+        {
+          "files": ["src/*.jsx"],
+          "rules": {
+            "no-plusplus": "off",
+            "no-mixed-operators": "off",
+            "react/prop-types": "warn"
+          }
+        }
+    ]
 }
