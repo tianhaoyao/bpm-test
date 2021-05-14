@@ -41,7 +41,7 @@ function KeySelector({
   useKeyPress();
 
   return (
-    <div>
+    <div className="option-item">
       {adjust ? (
         <div className="overlay">
           <div className="message">
@@ -50,14 +50,10 @@ function KeySelector({
 
         </div>
       ) : null}
-      <div style={{
-        paddingTop: '10vh', paddingLeft: '3vw', paddingRight: '3vw', fontFamily: 'Comfortaa',
-      }}
-      >
-
+      <div>
         <h4>
           Set
-          {k}
+          {` ${k}`}
           :
           {' '}
         </h4>
