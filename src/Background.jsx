@@ -34,7 +34,7 @@ const Background = forwardRef((props, ref) => {
     });
   });
 
-  const update = (timerS, ogBpm) => {
+  const update = (timerS, bpm) => {
     const timer = timerS * 1000;
     if (timer < lastUpdate + transitionDuration) {
       if (timer > lastUpdate) {
@@ -42,7 +42,6 @@ const Background = forwardRef((props, ref) => {
       }
     }
     setPrevImageUrl(imageUrl);
-    const bpm = ogBpm * 2;
     let url = '';
     let thisrange = -1;
     switch (true) {
