@@ -117,7 +117,7 @@ function App() {
 
   const insertData = (time, currBpm, currInstantBpm) => {
     chartRef.current.update(time, currBpm, currInstantBpm);
-    backgroundRef.current.update(currBpm);
+    backgroundRef.current.update(time, currBpm);
   };
 
   const measureBPM = () => {

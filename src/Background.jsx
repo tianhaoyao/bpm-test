@@ -11,8 +11,12 @@ import bpm240 from './resources/240.jpg';
 import bpm260 from './resources/260.jpg';
 
 const Background = forwardRef((props, ref) => {
+  const transitionDuration = 2000;
+  const [lastUpdate, setLastUpdate] = useState(-transitionDuration);
   const [imageUrl, setImageUrl] = useState(bpm140);
+  const [prevImageUrl, setPrevImageUrl] = useState(bpm140);
   const [range, setRange] = useState(0);
+  const imageList = [bpm160, bpm180, bpm200, bpm220, bpm240, bpm260];
   const style = {
     flex: 1,
     maxWidth: '100%',
@@ -25,13 +29,20 @@ const Background = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    const imageList = [bpm160, bpm180, bpm200, bpm220, bpm240, bpm260];
     imageList.forEach((image) => {
       new Image().src = image;
     });
   });
 
-  const update = (bpm) => {
+  const update = (timerS, ogBpm) => {
+    const timer = timerS * 1000;
+    if (timer < lastUpdate + transitionDuration) {
+      if (timer > lastUpdate) {
+        return;
+      }
+    }
+    setPrevImageUrl(imageUrl);
+    const bpm = ogBpm * 2;
     let url = '';
     let thisrange = -1;
     switch (true) {
@@ -43,7 +54,7 @@ const Background = forwardRef((props, ref) => {
         thisrange = 1;
         url = bpm160;
         break;
-      case (bpm >= 180 && bpm < 200):
+      case (bpm >= 180 && bpm < 210):
         thisrange = 2;
         url = bpm180;
         break;
@@ -64,13 +75,14 @@ const Background = forwardRef((props, ref) => {
         url = bpm260;
         break;
       default:
-        thisrange = 0;
-        url = bpm140;
+        thisrange = range;
+        url = imageUrl;
         break;
     }
     if (thisrange === range) return;
     setImageUrl(url);
     setRange(thisrange);
+    setLastUpdate(timer);
   };
 
   useImperativeHandle(ref, () => ({
@@ -80,10 +92,12 @@ const Background = forwardRef((props, ref) => {
   return (
     <div>
       <CrossfadeImage
+        duration={transitionDuration}
         id="backgroundimg"
         src={imageUrl}
         style={style}
       />
+      <img id="background" src={prevImageUrl} alt="background" />
     </div>
   );
 });
