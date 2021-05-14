@@ -11,7 +11,7 @@ import BPMDisplay from './BPMDisplay';
 import Options from './Options';
 
 function App() {
-  const TESTTIME = 10000;
+  const [testTime, setTestTime] = useState(10);
   const [counterL, setCounterL] = useState(0);
   const [counterR, setCounterR] = useState(0);
   const [timer, setTimer] = useState(0);
@@ -174,7 +174,7 @@ function App() {
       const delta = Date.now() - start;
       setTimer(delta);
     }, 10);
-    setCurrDiff(TESTTIME - timer);
+    setCurrDiff(testTime * 1000 - timer);
   };
 
   useEffect(() => {
@@ -184,7 +184,7 @@ function App() {
         measureBPM();
         UR();
       }
-      if (timer >= TESTTIME) {
+      if (timer >= testTime * 1000) {
         handleStop();
       }
     }
@@ -246,9 +246,10 @@ function App() {
       <Graph
         showTT={running}
         ref={chartRef}
+        testTime={testTime}
       />
       <div className="progressBar">
-        <ProgressBar animated variant="warning" label={`${Math.round(timer / 1000)} / ${Math.round(TESTTIME / 1000)}`} now={Math.round(timer / 1000)} min={0} max={Math.round(TESTTIME / 1000)} />
+        <ProgressBar animated variant="warning" label={`${Math.round(timer / 1000)} / ${Math.round(testTime)}`} now={Math.round(timer / 1000)} min={0} max={Math.round(testTime)} />
       </div>
       <SideSheet
         isShown={options}
@@ -262,6 +263,8 @@ function App() {
           adjust2={adjust2}
           setAdjust={() => setAdjust(true)}
           setAdjust2={() => setAdjust2(true)}
+          testTime={testTime}
+          setTestTime={setTestTime}
         />
 
       </SideSheet>

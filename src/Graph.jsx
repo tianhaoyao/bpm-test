@@ -22,9 +22,9 @@ const Graph = forwardRef((props, ref) => {
 
     xaxis: {
       type: 'numeric',
-      range: 10,
+      range: props.testTime,
       min: 0,
-      max: 10,
+      max: props.testTime,
       labels: {
         show: false,
       },
@@ -88,6 +88,21 @@ const Graph = forwardRef((props, ref) => {
     });
   }, [props.showTT]);
 
+  useEffect(() => {
+    setOptions({
+      ...options,
+      xaxis: {
+        ...options.xaxis,
+        range: props.testTime,
+        max: props.testTime,
+      },
+      stroke: {
+        ...options.stroke,
+        width: props.testTime < 15 ? 4 : 2,
+      },
+    });
+  }, [props.testTime]);
+
   const [series, setSeries] = useState([
     {
       name: 'Overall BPM',
@@ -144,6 +159,7 @@ const Graph = forwardRef((props, ref) => {
 });
 Graph.propTypes = {
   showTT: PropTypes.bool.isRequired,
+  testTime: PropTypes.number.isRequired,
 };
 
 export default Graph;
