@@ -25,7 +25,9 @@
           "rules": {
             "no-plusplus": "off",
             "no-mixed-operators": "off",
-            "react/prop-types": "warn"
+            "react/prop-types": "warn",
+            "no-unused-vars": "warn",
+            "react/jsx-props-no-spreading": "off"
           }
         }
     ]
