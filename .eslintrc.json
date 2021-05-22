@@ -18,7 +18,11 @@
         "react"
     ],
     "rules": {
+        "linebreak-style": ["error", "windows"]
     },
+    "editor.codeActionsOnSave": { "source.fixAll.eslint": true }, 
+    "editor.formatOnSave": true, 
+    "eslint.alwaysShowStatus": true, 
     "overrides": [
         {
           "files": ["src/*.jsx"],
@@ -27,7 +31,10 @@
             "no-mixed-operators": "off",
             "react/prop-types": "warn",
             "no-unused-vars": "warn",
-            "react/jsx-props-no-spreading": "off"
+            "react/jsx-props-no-spreading": "off",
+            "quotes": "off",
+            "no-shadow": "off",
+            "react/jsx-one-expression-per-line": "off"
           }
         }
     ]

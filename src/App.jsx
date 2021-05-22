@@ -1,14 +1,18 @@
-import './styles/App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState, useEffect, useRef } from 'react';
-import Button from 'react-bootstrap/Button';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import { SideSheet } from 'evergreen-ui';
-import Graph from './Graph';
-import Clicker from './Clicker';
-import Background from './Background';
-import BPMDisplay from './BPMDisplay';
-import Options from './Options';
+import "./styles/App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
+import Button from "react-bootstrap/Button";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import { SideSheet } from "evergreen-ui";
+import Graph from "./Graph";
+import Clicker from "./Clicker";
+import Background from "./Background";
+import BPMDisplay from "./BPMDisplay";
+import Options from "./Options";
 
 function App() {
   const [testTime, setTestTime] = useState(10);
@@ -16,8 +20,8 @@ function App() {
   const [counterR, setCounterR] = useState(0);
   const [timer, setTimer] = useState(0);
   const [running, setRunning] = useState(false);
-  const [k1, setK1] = useState('z');
-  const [k2, setK2] = useState('x');
+  const [k1, setK1] = useState("z");
+  const [k2, setK2] = useState("x");
   const [adjust, setAdjust] = useState(false);
   const [adjust2, setAdjust2] = useState(false);
   const countRef = useRef(null);
@@ -30,6 +34,30 @@ function App() {
   const [diffs, setDiffs] = useState([]);
   const [currDiff, setCurrDiff] = useState(null);
   const [clickTimes, setClickTimes] = useState([]);
+  const [leaderboards, setLeaderboards] = useState([]);
+
+  const getLocalStorage = (name) => {
+    let item = localStorage.getItem(name);
+    item = item ? item.split(',') : [];
+    return item;
+  };
+
+  useEffect(() => {
+    const bpmList = getLocalStorage('bpm');
+    const URList = getLocalStorage('unstable');
+    const counterList = getLocalStorage('counter');
+    const testTimeList = getLocalStorage('testTime');
+    const data = [];
+    for (let i = 0; i < bpmList.length; i++) {
+      data.push({
+        bpm: bpmList[i],
+        unstable: URList[i],
+        counter: counterList[i],
+        testTime: testTimeList[i],
+      });
+    }
+    setLeaderboards(data.sort((a, b) => b.bpm - a.bpm));
+  }, []);
 
   // https://usehooks.com/useKeyPress/
   function useKeyPress(targetKey) {
@@ -37,19 +65,19 @@ function App() {
     const [keyPressed, setKeyPressed] = useState(false);
     // If pressed key is our target key then set to true
     const downHandler = ({ key }) => {
-      if (targetKey === 'key1' && key === k1) {
+      if (targetKey === "key1" && key === k1) {
         setKeyPressed(true);
       }
-      if (targetKey === 'key2' && key === k2) {
+      if (targetKey === "key2" && key === k2) {
         setKeyPressed(true);
       }
     };
     // If released key is our target key then set to false
     const upHandler = ({ key }) => {
-      if (targetKey === 'key1' && key === k1) {
+      if (targetKey === "key1" && key === k1) {
         setKeyPressed(false);
       }
-      if (targetKey === 'key2' && key === k2) {
+      if (targetKey === "key2" && key === k2) {
         setKeyPressed(false);
       }
     };
@@ -57,19 +85,19 @@ function App() {
     // Add event listeners
     useEffect(() => {
       setKeyPressed(false);
-      window.addEventListener('keydown', downHandler);
-      window.addEventListener('keyup', upHandler);
+      window.addEventListener("keydown", downHandler);
+      window.addEventListener("keyup", upHandler);
       // Remove event listeners on cleanup
       return () => {
-        window.removeEventListener('keydown', downHandler);
-        window.removeEventListener('keyup', upHandler);
+        window.removeEventListener("keydown", downHandler);
+        window.removeEventListener("keyup", upHandler);
       };
     }, [k1, k2]);
     return keyPressed;
   }
 
-  const key1 = useKeyPress('key1');
-  const key2 = useKeyPress('key2');
+  const key1 = useKeyPress("key1");
+  const key2 = useKeyPress("key2");
 
   const UR = () => {
     const newDiff = diffs.slice(1);
@@ -124,17 +152,19 @@ function App() {
     const runningTime = timer;
     if (runningTime !== 0) {
       const ratio = 60000 / runningTime;
-      const currBpm = Math.round((counterL + counterR) * ratio / 4 * 100) / 100;
+      const currBpm = Math.round((((counterL + counterR) * ratio) / 4) * 100) / 100;
       let timeElapsed = 0;
       let i = diffs.length - 1;
       let n = 0;
       const timeThreshold = 0.333;
-      while (timeElapsed < timeThreshold && clickTimes[i] >= timer / 1000 - timeThreshold) {
+      while (
+        timeElapsed < timeThreshold && clickTimes[i] >= timer / 1000 - timeThreshold
+      ) {
         // if ()
         timeElapsed += diffs[i--];
         n++;
       }
-      const res = Math.round(60 / 4 / timeElapsed * n * 100) / 100;
+      const res = Math.round((60 / 4 / timeElapsed) * n * 100) / 100;
       if (Number.isNaN(res)) {
         setInstantBpm(0);
       } else {
@@ -177,6 +207,34 @@ function App() {
     setCurrDiff(testTime * 1000 - timer);
   };
 
+  const handleLocalStorage = (name, itemToPush) => {
+    let item = localStorage.getItem(name);
+    item = item ? item.split(',') : [];
+    item.push(itemToPush);
+    localStorage.setItem(name, item.toString());
+  };
+
+  const submitToLeaderboards = (
+    bpm,
+    unstable,
+    counterL,
+    counterR,
+    testTime,
+  ) => {
+    const counter = counterL + counterR;
+    handleLocalStorage("bpm", bpm);
+    handleLocalStorage("unstable", unstable);
+    handleLocalStorage("counter", counter);
+    handleLocalStorage("testTime", testTime);
+    const data = {
+      bpm,
+      unstable,
+      counter,
+      testTime,
+    };
+    setLeaderboards([...leaderboards, data].sort((a, b) => b.bpm - a.bpm));
+  };
+
   useEffect(() => {
     if (running) {
       if (Math.floor(timer / 10) % 5 === 0) {
@@ -185,6 +243,7 @@ function App() {
         UR();
       }
       if (timer >= testTime * 1000) {
+        submitToLeaderboards(bpm, unstable, counterL, counterR, testTime);
         handleStop();
       }
     }
@@ -211,51 +270,41 @@ function App() {
       </div>
       <div className="display">
         <div className="ui">
-
-          <h3>
-            {counterL + counterR}
-            {' '}
-            clicks
-          </h3>
+          <h3>{counterL + counterR} clicks</h3>
           <BPMDisplay bpm={bpm} />
+          <p>{unstable.toFixed(2)} UR</p>
+          <Clicker key1={key1} key2={key2} k1={k1} k2={k2} />
+
+          <Button variant="outline-light" onClick={handleStart}>
+            Start
+          </Button>
+          <Button variant="outline-light" onClick={handleStop}>
+            Stop
+          </Button>
           <p>
-            {unstable.toFixed(2)}
-            {' '}
-            UR
+            {(leaderboards && !running) && leaderboards.map((score) => (
+              <p>{score.bpm}bpm {score.unstable}ur {score.testTime}time {score.counter}#</p>))}
           </p>
-          <Clicker
-            key1={key1}
-            key2={key2}
-            k1={k1}
-            k2={k2}
-          />
 
-          <Button variant="outline-light" onClick={handleStart}>Start</Button>
-          <Button variant="outline-light" onClick={handleStop}>Stop</Button>
         </div>
-
       </div>
       <div className="optionsButton">
-        <Button
-          onClick={() => setOptions(true)}
-          variant="outline-light"
-        >
+        <Button onClick={() => setOptions(true)} variant="outline-light">
           Options
         </Button>
       </div>
-      <Graph
-        showTT={running}
-        ref={chartRef}
-        testTime={testTime}
-      />
+      <Graph showTT={running} ref={chartRef} testTime={testTime} />
       <div className="progressBar">
-        <ProgressBar animated variant="warning" label={`${Math.round(timer / 1000)} / ${Math.round(testTime)}`} now={Math.round(timer / 1000)} min={0} max={Math.round(testTime)} />
+        <ProgressBar
+          animated
+          variant="warning"
+          label={`${Math.round(timer / 1000)} / ${Math.round(testTime)}`}
+          now={Math.round(timer / 1000)}
+          min={0}
+          max={Math.round(testTime)}
+        />
       </div>
-      <SideSheet
-        isShown={options}
-        onCloseComplete={() => setOptions(false)}
-      >
-
+      <SideSheet isShown={options} onCloseComplete={() => setOptions(false)}>
         <Options
           set1={setKey1}
           set2={setKey2}
@@ -266,9 +315,7 @@ function App() {
           testTime={testTime}
           setTestTime={setTestTime}
         />
-
       </SideSheet>
-
     </div>
   );
 }
