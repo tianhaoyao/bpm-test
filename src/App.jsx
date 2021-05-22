@@ -13,6 +13,7 @@ import Clicker from "./Clicker";
 import Background from "./Background";
 import BPMDisplay from "./BPMDisplay";
 import Options from "./Options";
+import Leaderboards from "./Leaderboards";
 
 function App() {
   const [testTime, setTestTime] = useState(10);
@@ -282,8 +283,7 @@ function App() {
             Stop
           </Button>
           <p>
-            {(leaderboards && !running) && leaderboards.map((score) => (
-              <p>{score.bpm}bpm {score.unstable}ur {score.testTime}time {score.counter}#</p>))}
+            {(leaderboards && !running) && <Leaderboards leaderboards={leaderboards} />}
           </p>
 
         </div>
