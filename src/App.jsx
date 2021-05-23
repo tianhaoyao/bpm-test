@@ -37,27 +37,10 @@ function App() {
   const [clickTimes, setClickTimes] = useState([]);
   const [leaderboards, setLeaderboards] = useState([]);
 
-  const getLocalStorage = (name) => {
-    let item = localStorage.getItem(name);
-    item = item ? item.split(',') : [];
-    return item;
-  };
-
   useEffect(() => {
-    const bpmList = getLocalStorage('bpm');
-    const URList = getLocalStorage('unstable');
-    const counterList = getLocalStorage('counter');
-    const testTimeList = getLocalStorage('testTime');
-    const data = [];
-    for (let i = 0; i < bpmList.length; i++) {
-      data.push({
-        bpm: bpmList[i],
-        unstable: URList[i],
-        counter: counterList[i],
-        testTime: testTimeList[i],
-      });
-    }
-    setLeaderboards(data.sort((a, b) => b.bpm - a.bpm));
+    const leaderboards = localStorage.getItem("leaderboards");
+    const data = leaderboards ? JSON.parse(leaderboards).lb : [];
+    setLeaderboards(data);
   }, []);
 
   // https://usehooks.com/useKeyPress/
@@ -208,13 +191,6 @@ function App() {
     setCurrDiff(testTime * 1000 - timer);
   };
 
-  const handleLocalStorage = (name, itemToPush) => {
-    let item = localStorage.getItem(name);
-    item = item ? item.split(',') : [];
-    item.push(itemToPush);
-    localStorage.setItem(name, item.toString());
-  };
-
   const submitToLeaderboards = (
     bpm,
     unstable,
@@ -223,17 +199,15 @@ function App() {
     testTime,
   ) => {
     const counter = counterL + counterR;
-    handleLocalStorage("bpm", bpm);
-    handleLocalStorage("unstable", unstable);
-    handleLocalStorage("counter", counter);
-    handleLocalStorage("testTime", testTime);
     const data = {
       bpm,
       unstable,
       counter,
       testTime,
     };
-    setLeaderboards([...leaderboards, data].sort((a, b) => b.bpm - a.bpm));
+    const newLeaderboard = [...leaderboards, data].sort((a, b) => b.bpm - a.bpm);
+    setLeaderboards(newLeaderboard);
+    localStorage.setItem("leaderboards", JSON.stringify({ lb: newLeaderboard }));
   };
 
   useEffect(() => {

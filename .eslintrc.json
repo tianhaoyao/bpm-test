@@ -20,9 +20,6 @@
     "rules": {
         "linebreak-style": ["error", "windows"]
     },
-    "editor.codeActionsOnSave": { "source.fixAll.eslint": true }, 
-    "editor.formatOnSave": true, 
-    "eslint.alwaysShowStatus": true, 
     "overrides": [
         {
           "files": ["src/*.jsx"],

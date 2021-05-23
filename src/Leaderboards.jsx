@@ -1,30 +1,65 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Table } from 'react-bootstrap';
+import {
+  ListGroup,
+  Card,
+  Container,
+  Col,
+  Row,
+} from 'react-bootstrap';
 
 function Leaderboards({ leaderboards }) {
+  const listGroupStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    paddingLeft: '1rem',
+    paddingTop: '1rem',
+  };
+  const cardStyle = {
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: '1rem',
+  };
+  const cardBodyStyle = {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    flexWrap: 'nowrap',
+  };
+  const cardTextStyle = {
+    flexDirection: 'col',
+  };
   return (
     <div className="leaderboards">
-      <Table striped bordered hover>
-        <thead>
-          <th>#</th>
-          <th>bpm</th>
-          <th>ur</th>
-          <th>time</th>
-          <th>clicks</th>
-        </thead>
-        <tbody>
+      <ListGroup variant="flush" style={listGroupStyle}>
+        <ListGroup.Item style={{ backgroundColor: 'transparent' }}>
           {leaderboards.map((score, index) => (
-            <tr>
-              <td>{index + 1}</td>
-              <td>{score.bpm}</td>
-              <td>{score.unstable}</td>
-              <td>{score.testTime}</td>
-              <td>{score.counter}</td>
-            </tr>
+            <Card style={cardStyle}>
+              <Card.Header>{index + 1}</Card.Header>
+              <Card.Body>
+                <Container>
+                  <Row>
+                    <Col>
+                      <h2>{score.bpm}</h2>
+                    </Col>
+                    <Col>
+
+                      <p>{score.unstable}</p>
+                      <p>{score.testTime}</p>
+                      <p>{score.counter}</p>
+
+                    </Col>
+                  </Row>
+                </Container>
+              </Card.Body>
+              {/* <p>{score.bpm}</p>
+              <p>{score.unstable}</p>
+              <p>{score.testTime}</p>
+              <p>{score.counter}</p> */}
+            </Card>
           ))}
-        </tbody>
-      </Table>
+        </ListGroup.Item>
+      </ListGroup>
     </div>
   );
 }
