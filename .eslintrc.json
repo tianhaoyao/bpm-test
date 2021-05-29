@@ -5,7 +5,8 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "airbnb"
+        "airbnb",
+        "prettier"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -27,7 +28,8 @@
             "no-mixed-operators": "off",
             "react/prop-types": "warn",
             "no-unused-vars": "warn",
-            "react/jsx-props-no-spreading": "off"
+            "react/jsx-props-no-spreading": "off",
+            "linebreak-style": 0
           }
         }
     ]
