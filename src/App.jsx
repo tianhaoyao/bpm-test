@@ -130,7 +130,7 @@ function App() {
       let n = 0;
       const timeThreshold = 0.333;
       while (timeElapsed < timeThreshold && clickTimes[i] >= timer / 1000 - timeThreshold) {
-        // if ()
+        if(i === 0) break;
         timeElapsed += diffs[i--];
         n++;
       }
